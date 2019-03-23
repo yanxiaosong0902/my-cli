@@ -5,6 +5,12 @@ module.exports = {
   'sideEffects': false,
   'dependencies': {},
   'devDependencies': {
+    '@babel/core': '^7.3.4',
+    '@babel/plugin-transform-runtime': '^7.3.4',
+    '@babel/preset-env': '^7.3.4',
+    '@babel/runtime': '^7.3.4',
+    'babel-loader': '^8.0.0-beta.0',
+    'babel-polyfill': '^6.26.0',
     'clean-webpack-plugin': '^1.0.1',
     'css-loader': '^2.1.0',
     'extract-text-webpack-plugin': '^4.0.0-beta.0',

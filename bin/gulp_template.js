@@ -26,12 +26,7 @@ module.exports = {
     'gulp-sass': '^4.0.1',
     'gulp-uglify': '^3.0.1',
     'gulp-useref': '^3.1.5',
-    'run-sequence': '^2.2.1',
-    'standalonify': '^0.1.3',
-    'vinyl-buffer': '^1.0.1',
-    'vinyl-source-stream': '^2.0.0'
-  },
-  'dependencies': {
-    'simditor': '^2.3.23'
+    'http-proxy-middleware': '^0.19.1',
+    'run-sequence': '^2.2.1'
   }
 }

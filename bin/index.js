@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 /*eslint-disable no-undef*/
 
-const clone = require('git-clone-promise')
 const shell = require('shelljs')
 const inquirer = require('inquirer')
-const path = require('path')
+// const path = require('path')
 const program = require('commander')
-const absPath = path.resolve()
 const fs = require('fs');
 let tool = ''
 let eslint = true
@@ -17,7 +15,7 @@ program
   .command('create <projectName>')
   .description('list files in current working directory')
   .option('-a, --all', 'Whether to display hidden files')
-  .action(function(projectName) {
+  .action(async function(projectName) {
     console.log('choose project tool')
     let choices = ['webpack', 'gulp']
     let questions = [{
@@ -26,97 +24,110 @@ program
       message: 'which project tool do you want to install ?',
       choices
     }]
-    inquirer.prompt(questions)
-      .then((answers) => {
-        tool = answers['project_tool']
-        let choices = ['yes', 'no']
-        let questions = [{
-          type: 'list',
-          name: 'eslint',
-          message: 'Do you need use eslint for your code?',
-          choices
-        }]
-        inquirer.prompt(questions).then((answers) => {
-          eslint = answers['eslint']
-          fs.mkdirSync(`./${projectName}`, {recursive: true})
-          if (tool === 'webpack') {
-            let webpack_json = require(__dirname + '/package_template.js')
-            webpack_json.name = projectName
-            if (eslint) {
-              webpack_json.devDependencies.eslint = '^5.10.0'
-              webpack_json.devDependencies['babel-eslint'] = '^10.0.1'
-              webpack_json.devDependencies['eslint-plugin-html'] = '^5.0.0'
-              webpack_json.devDependencies['eslint-plugin-jsx-a11y'] = '^6.1.2'
-              fs.readFile(__dirname + '/eslint.js', 'UTF-8', (err, data) => {
-                if (err) {
-                  throw err
-                } else {
-                  fs.writeFile(`./${projectName}/.eslintrc.js`, data, (err) => {
-                    if (err) throw err
-                  })
-                }
-              })
-            }
-            webpack_json = JSON.stringify(webpack_json, null, 2)
-            fs.writeFile(`./${projectName}/package.json`, webpack_json, (err) => {
-              if (err) throw err
-            })
-            fs.mkdirSync(`./${projectName}/src/assets`, {recursive: true})
-            fs.copyFile(__dirname + '/reset.css', `./${projectName}/src/assets/reset.css`, (err) => {
-              if (err) throw err
-            })
-            fs.copyFile(__dirname + '/webpack_html.html', `./${projectName}/index.html`, (err) => {
-              if (err) throw err
-            })
-            fs.copyFile(__dirname + '/webpack.dev.config.js', `./${projectName}/webpack.dev.config.js`, (err) => {
-              if (err) throw err
-            })
-            fs.copyFile(__dirname + '/webpack.prod.config.js', `./${projectName}/webpack.prod.config.js`, (err) => {
-              if (err) throw err
-            })
+    let tool_option = await inquirer.prompt(questions)
+    tool = tool_option['project_tool']
+    let eslint_choices = ['yes', 'no']
+    let eslint_questions = [{
+      type: 'list',
+      name: 'eslint',
+      message: 'Do you need use eslint for your code?',
+      choices: eslint_choices
+    }]
+    let eslint_option = await inquirer.prompt(eslint_questions)
+    eslint = eslint_option['eslint']
+    fs.mkdirSync(`./${projectName}`, {recursive: true})
+    shell.cd(`./${projectName}`)
+    if (tool === 'webpack') {
+      let webpack_json = require(__dirname + '/package_template.js')
+      webpack_json.name = projectName
+      if (eslint) {
+        webpack_json.devDependencies.eslint = '^5.10.0'
+        webpack_json.devDependencies['babel-eslint'] = '^10.0.1'
+        webpack_json.devDependencies['eslint-plugin-html'] = '^5.0.0'
+        webpack_json.devDependencies['eslint-plugin-jsx-a11y'] = '^6.1.2'
+        fs.readFile(__dirname + '/eslint.js', 'UTF-8', (err, data) => {
+          if (err) {
+            throw err
           } else {
-            let gulp_json = require(__dirname + '/gulp_template.js')
-            gulp_json.name = projectName
-            if (eslint) {
-              gulp_json.devDependencies.eslint = '^5.10.0'
-              gulp_json.devDependencies['babel-eslint'] = '^10.0.1'
-              gulp_json.devDependencies['eslint-plugin-html'] = '^5.0.0'
-              gulp_json.devDependencies['eslint-plugin-jsx-a11y'] = '^6.1.2'
-              fs.readFile(__dirname + '/eslint.js', 'UTF-8', (err, data) => {
-                if (err) {
-                  throw err
-                } else {
-                  fs.writeFile(`./${projectName}/.eslintrc.js`, data, (err) => {
-                    if (err) throw err
-                  })
-                }
-              })
-            }
-            gulp_json = JSON.stringify(gulp_json, null, 2)
-            shell.cd(`./${projectName}`)
-            shell.mkdir('-p', ['app/css', 'app/scss', 'app/js', 'app/lib', 'app/img'])
-            shell.cp(__dirname + '/gulp_html.html', 'app/index.html')
-            shell.cp(__dirname + '/reset.css', 'app/css/reset.css')
-            fs.writeFile('./package.json', gulp_json, (err) => {
-              if (err) throw err
-              try {
-                shell.exec('npm install', (err) => {
-                  if (err) {
-                    throw err
-                  } else {
-                    shell.exec('gulp')
-                  }
-                })
-              } catch (e) {
-                console.log(e);
-              }
-            })
-            fs.copyFile(__dirname + '/gulp.js', './gulpfile.js', (err) => {
+            fs.writeFile('./.eslintrc.js', data, (err) => {
               if (err) throw err
             })
           }
         })
+      }
+      fs.copyFile(__dirname + '/.babelrc', './.babelrc', (err) => {
+        if (err) throw err
       })
+      fs.mkdirSync('./src/assets', {recursive: true})
+      fs.writeFile('./src/index.js', 'import "./assets/reset.css"', (err) => {
+        if (err) throw err
+      })
+      fs.copyFile(__dirname + '/reset.css', './src/assets/reset.css', (err) => {
+        if (err) throw err
+      })
+      fs.copyFile(__dirname + '/webpack_html.html', './index.html', (err) => {
+        if (err) throw err
+      })
+      fs.copyFile(__dirname + '/webpack.dev.config.js', './webpack.dev.config.js', (err) => {
+        if (err) throw err
+      })
+      fs.copyFile(__dirname + '/webpack.prod.config.js', './webpack.prod.config.js', (err) => {
+        if (err) throw err
+      })
+      webpack_json = JSON.stringify(webpack_json, null, 2)
+      fs.writeFile('./package.json', webpack_json, (err) => {
+        if (err) throw err
+        shell.exec('npm install', (err) => {
+          if (err) {
+            throw err
+          } else {
+            shell.exec('npm run dev')
+          }
+        })
+      })
+    } else {
+      let gulp_json = require(__dirname + '/gulp_template.js')
+      gulp_json.name = projectName
+      if (eslint) {
+        gulp_json.devDependencies.eslint = '^5.10.0'
+        gulp_json.devDependencies['babel-eslint'] = '^10.0.1'
+        gulp_json.devDependencies['eslint-plugin-html'] = '^5.0.0'
+        gulp_json.devDependencies['eslint-plugin-jsx-a11y'] = '^6.1.2'
+        fs.readFile(__dirname + '/eslint.js', 'UTF-8', (err, data) => {
+          if (err) {
+            throw err
+          } else {
+            fs.writeFile('./.eslintrc.js', data, (err) => {
+              if (err) throw err
+            })
+          }
+        })
+      }
+      gulp_json = JSON.stringify(gulp_json, null, 2)
+      shell.mkdir('-p', ['app/css', 'app/scss', 'app/js', 'app/lib', 'app/img'])
+      fs.writeFile('./app/index.js', 'console.log(123)', (err) => {
+        if (err) throw err
+      })
+      shell.cp(__dirname + '/gulp_html.html', 'app/index.html')
+      shell.cp(__dirname + '/reset.css', 'app/scss/reset.scss')
+      fs.writeFile('./package.json', gulp_json, (err) => {
+        if (err) throw err
+        try {
+          fs.copyFile(__dirname + '/gulp.js', './gulpfile.js', (err) => {
+            if (err) throw err
+            shell.exec('npm install', (err) => {
+              if (err) {
+                throw err
+              } else {
+                shell.exec('gulp')
+              }
+            })
+          })
+        } catch (e) {
+          console.log(e);
+        }
+      })
+    }
   })
 program
   .command('list')

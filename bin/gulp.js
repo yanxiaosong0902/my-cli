@@ -15,6 +15,15 @@ var cache = require('gulp-cache');
 var del = require('del');
 var runSequence = require('run-sequence');
 var babel = require('gulp-babel');
+var proxy = require('http-proxy-middleware')
+var proxy_port = proxy('/api', {
+  target: 'http://localhost:3000',
+  pathRewrite: {
+    '^/api': '/'
+  },
+  changeOrigin: true,
+  logLevel: 'debug'
+})
 gulp.task('sass', function() {
   return gulp.src('app/scss/*.scss')
     .pipe(sass())
@@ -29,6 +38,7 @@ gulp.task('browserSync', function() {
     server: {
       baseDir: 'app'
     },
+    middleware: [proxy_port],
     notify: false
   })
 });

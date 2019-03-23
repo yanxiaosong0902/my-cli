@@ -1,11 +1,15 @@
 /*eslint-disable*/
 const path = require('path')
+require('babel-polyfill')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyjsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    app: ['babel-polyfill', './src/index.js'],
+    //vendor: ['axios']
+  },
   mode: 'production',
   //devtool: 'source-map',
   plugins: [
@@ -19,6 +23,15 @@ module.exports = {
       template: './index.html'
     })
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: 'vendor'
+    },
+    runtimeChunk: {
+      name: 'runtime'
+    }
+  },
   output: {
     filename: 'bundle-[hash].js',
     path: path.resolve(__dirname, './dist')
