@@ -1,11 +1,10 @@
 /*eslint-disable no-undef*/
 const path = require('path')
-require('babel-polyfill')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 //const CleanWebpackPlugin = require('clean-webpack-plugin')
 const webpack = require('webpack')
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['./src/index.js'],
   mode: 'development',
   plugins: [
     // new CleanWebpackPlugin(['dist'], {
@@ -17,15 +16,6 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      name: 'vendor'
-    },
-    runtimeChunk: {
-      name: 'runtime'
-    }
-  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
