@@ -1,13 +1,13 @@
 ### Download
 ```
 
-npm install yxs-cli -g
+npm install keith-cli -g
 
 ```
 ### Commander
 ```
 
-yxs create <projectName>
+keith create <projectName>
 
 ```
 
