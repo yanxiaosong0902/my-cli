@@ -58,6 +58,9 @@ program
       fs.copyFile(__dirname + '/.babelrc', './.babelrc', (err) => {
         if (err) throw err
       })
+      fs.copyFile(__dirname + '/postcss.config.js', './postcss.config.js', (err) => {
+        if (err) throw err
+      })
       fs.mkdirSync('./src/assets', {recursive: true})
       fs.writeFile('./src/index.js', 'import "./assets/reset.css"', (err) => {
         if (err) throw err
