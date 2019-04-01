@@ -1,10 +1,10 @@
 /*eslint-disable*/
 const path = require('path')
 require('babel-polyfill')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyjsPlugin = require('uglifyjs-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 module.exports = {
   entry: {
     app: ['babel-polyfill', './src/index.js'],
@@ -13,11 +13,11 @@ module.exports = {
   mode: 'production',
   //devtool: 'source-map',
   plugins: [
-    new ExtractTextPlugin({
-      filename: './css/style.css'
-    }),
     new CleanWebpackPlugin(['dist'], {
       verbose: true
+    }),
+    new MiniCssExtractPlugin({
+      filename: './css/style.css'
     }),
     new HtmlWebpackPlugin({
       template: './index.html'
@@ -30,11 +30,17 @@ module.exports = {
     },
     runtimeChunk: {
       name: 'runtime'
-    }
+    },
+    minimizer: [
+      new UglifyjsPlugin(),
+      new OptimizeCSSAssetsPlugin()
+    ]
   },
   output: {
     filename: 'bundle-[hash].js',
-    path: path.resolve(__dirname, './dist')
+    path: path.resolve(__dirname, './dist'),
+    //libraryTarget: 'umd',
+    //umdNamedDefine: true
   },
   module: {
     rules: [
@@ -45,17 +51,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader']
-        })
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'sass-loader']
-        })
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/,
