@@ -9,7 +9,7 @@ const fs = require('fs');
 let tool = ''
 let eslint = true
 program
-  .version('0.0.1', '-v, --version')
+  .version('1.0.2', '-v, --version')
   .parse(process.argv)
 program
   .command('create <projectName>')
@@ -61,7 +61,9 @@ program
       fs.copyFile(__dirname + '/postcss.config.js', './postcss.config.js', (err) => {
         if (err) throw err
       })
-      fs.mkdirSync('./src/assets', {recursive: true})
+      //fs.mkdirSync('src/assets', {recursive: true})
+      fs.mkdirSync('src')
+      fs.mkdirSync('src/assets')
       fs.writeFile('./src/index.js', 'import "./assets/reset.css"', (err) => {
         if (err) throw err
       })
