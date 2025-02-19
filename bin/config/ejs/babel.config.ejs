@@ -1,0 +1,15 @@
+module.exports = {
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        useBuiltIns: 'usage',
+        corejs: 3
+      }
+    ],
+    <% if(plugins.length>0) { -%>
+      <% plugins.forEach(plugin => { -%>
+        <%- plugin -%>,
+    <% }) %><% } -%>
+  ]
+}

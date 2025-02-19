@@ -1,0 +1,43 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+module.exports = {
+  entry: [
+    <% if(entry.length > 0) { -%>
+      <% entry.forEach(entry => { -%>
+        <%- entry -%>,
+    <% }) -%>
+    <% } -%>
+  ],
+  mode: 'development',
+  module: {
+    rules: [
+    <% if(rules.length > 0) { -%>
+      <% rules.forEach(rule => { -%>
+      <%- rule -%>,
+    <% }) %><% } -%>
+    ]
+  },
+  plugins: [
+    <% if(plugins.length>0) { -%>
+      <% plugins.forEach(plugin => { -%>
+        <%- plugin -%>,
+   <% }) %><% } -%>
+  ],
+  output: {
+    filename: '[name]-[fullhash].js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  resolve: {
+    modules: [path.resolve(__dirname, 'src'), 'node_modules', path.resolve(__dirname, 'node_modules')],
+    extensions: [
+      <% if(extensions.length > 0) { -%>
+        <% extensions.forEach(extension => { -%>
+          <%- extension -%>,
+      <% }) %><% } -%>
+    ],
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  },
+  devtool: 'inline-source-map',
+}
