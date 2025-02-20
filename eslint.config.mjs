@@ -5,7 +5,10 @@ import n from 'eslint-plugin-n'
 export default  [
   pluginJs.configs.recommended,
   {
-    files: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts', '**/*.mjs'],
+    ignores: ['node_modules', '*.js', 'types', 'bin/template'],
+  },
+  {
+    files: ['**/*.js', '**/*.jsx', '**/*.mjs'],
     plugins: {
       n: n
     },
@@ -30,7 +33,7 @@ export default  [
       'space-before-blocks': 'error',
       'no-explicit-any': 'off',
       'semi': ['error', 'never'],
-      'no-unused-vars': 'off',
+      'no-unused-vars': 'warn',
       'indent': ['error', 2, {
         'ignoredNodes': ['ConditionalExpression', 'TSTypeParameterInstantiation'],
         'SwitchCase': 1,

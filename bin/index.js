@@ -7,63 +7,13 @@ import inquirer from 'inquirer'
 import program from 'commander'
 import fs from 'fs-extra'
 import { createWebProject } from './lib/createWebProject.js'
-import { ProjectTypeOptions, Options, BundlerOptions } from './options/options.js'
+import { ProjectTypeOptions, Options } from './options/options.js'
 import { getLatestVersion } from './lib/getLatestVersion.js'
 
 // 获取当前模块的路径
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-
-const PackageJSONPath = resolve(__dirname, '../package.json')
-const CliName = 'keith-cli'
-const packageJson = fs.readFileSync(PackageJSONPath, {
-  encoding: 'utf-8'
-})
-const packageJsonObj = JSON.parse(packageJson)
-const latestVersion = getLatestVersion(CliName)
-const currentNodeVersion = process.version
-if (currentNodeVersion.split('.')[0].replace(/[^\d]/g, '') < 20) {
-  console.log(chalk.red('Node.js version must be greater than ') + chalk.green('v20,') + chalk.red('current version is ') + chalk.yellow(`${currentNodeVersion}`))
-  process.exit(1)
-}
-if (latestVersion.replaceAll('.', '') >  packageJsonObj.version.replaceAll('.', '')) {
-  console.log(chalk.yellow(`New version （${latestVersion}） of ${CliName} is available. Run npm install -g ${CliName} to update.`))
-}
-program
-  .name(CliName)
-  .version(packageJsonObj.version, '-v, --version')
-
-program
-  .command('create <projectName>')
-  .description('create a new project')
-  .action(async function(projectName) {
-
-    if (fs.existsSync(`./${projectName}`)) {
-      console.error(`${projectName} already exists, please change the project name`)
-      process.exit(1)
-    }
-
-    const projectTypeQuestions = [{
-      type: 'list',
-      name: 'projectType',
-      message: 'which project type do you need ?',
-      choices: ProjectTypeOptions
-    }]
-    const { projectType } = await inquirer.prompt(projectTypeQuestions)
-
-    switch (projectType) {
-      case Options.Web:
-        createWebProject(projectName)
-        break
-      case Options.Node:
-        break
-      default:
-        break
-    }
-  })
-
-program.parse(process.argv)
 // let tool = ''
 // let eslint = true
 // program
@@ -208,3 +158,59 @@ program.parse(process.argv)
 //     });
 //   })
 // program.parse(process.argv)
+
+
+async function main() {
+  const PackageJSONPath = resolve(__dirname, '../package.json')
+  const CliName = 'keith-cli'
+  const packageJson = fs.readFileSync(PackageJSONPath, {
+    encoding: 'utf-8'
+  })
+  const packageJsonObj = JSON.parse(packageJson)
+  const latestVersion = await getLatestVersion(CliName)
+  const currentNodeVersion = process.version
+  if (currentNodeVersion.split('.')[0].replace(/[^\d]/g, '') < 20) {
+    console.log(chalk.red('Node.js version must be greater than ') + chalk.green('v20,') + chalk.red('current version is ') + chalk.yellow(`${currentNodeVersion}`))
+    process.exit(1)
+  }
+  if (latestVersion.replaceAll('.', '') >  packageJsonObj.version.replaceAll('.', '')) {
+    console.log(chalk.yellow(`New version （${latestVersion}） of ${CliName} is available. Run npm install -g ${CliName} to update.`))
+  }
+  console.log('Start to create project......')
+  program
+    .name(CliName)
+    .version(packageJsonObj.version, '-v, --version')
+
+  program
+    .command('create <projectName>')
+    .description('create a new project')
+    .action(async function(projectName) {
+
+      if (fs.existsSync(`./${projectName}`)) {
+        console.error(`${projectName} already exists, please change the project name`)
+        process.exit(1)
+      }
+
+      const projectTypeQuestions = [{
+        type: 'list',
+        name: 'projectType',
+        message: 'which project type do you need ?',
+        choices: ProjectTypeOptions
+      }]
+      const { projectType } = await inquirer.prompt(projectTypeQuestions)
+
+      switch (projectType) {
+        case Options.Web:
+          createWebProject(projectName)
+          break
+        case Options.Node:
+          break
+        default:
+          break
+      }
+    })
+
+  program.parse(process.argv)
+}
+
+main()

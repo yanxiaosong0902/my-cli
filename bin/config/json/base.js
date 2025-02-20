@@ -5,8 +5,6 @@ const packageJson = {
   'scripts': {
     'test': 'echo "Error: no test specified" && exit 1',
     'lint': 'eslint --ignore-pattern \'./node_modules/\' --ext .ts,.tsx ./',
-    'dev': 'webpack server --no-cache',
-    'build': 'rm -rf ./dist && webpack --config webpack.prod.config.js --no-cache'
   },
   'author': '',
   'license': 'ISC',

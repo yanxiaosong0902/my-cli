@@ -24,8 +24,9 @@ module.exports = {
    <% }) %><% } -%>
   ],
   output: {
-    filename: '[name]-[fullhash].js',
-    path: path.resolve(__dirname, 'dist')
+    filename: '[name]-[contenthash].js',
+    path: path.resolve(__dirname, 'dist'),
+    chunkFilename: 'async-[name]-[contenthash].js'
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules', path.resolve(__dirname, 'node_modules')],

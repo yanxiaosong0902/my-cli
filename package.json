@@ -20,6 +20,7 @@
     "git-clone-promise": "^1.0.0",
     "inquirer": "^6.2.2",
     "js-beautify": "^1.15.3",
+    "ora": "^8.2.0",
     "progress": "^2.0.3",
     "shelljs": "^0.8.3"
   },

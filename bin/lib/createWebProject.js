@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import { WebFrameOptions, ESLintOptions, LessOptions, TypeScriptOptions, BundlerOptions, Options } from '../options/options.js'
 import { genWebpackConfig } from './genWebpackConfig.js'
 import { writeWebpackFile } from './webpack/writeWebpackFile.js'
+import bar from '../progress/index.js'
 
 function parseOption(option) {
   return option === Options.Yes ? true : false
@@ -56,6 +57,8 @@ export async function createWebProject(projectName) {
     typescript: parseOption(typescript),
     eslint: parseOption(eslint)
   }
+
+  bar.tick(10)
 
   let config = null
   switch (bundler) {

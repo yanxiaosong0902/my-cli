@@ -12,7 +12,7 @@ import <%- plugin.value %> from '<%- plugin.importer %>'
 export default  [
   pluginJs.configs.recommended,
   {
-    ignores: ['node_modules', '*.js'],
+    ignores: ['node_modules', '*.js', 'types'],
   },
   <%- ts.rule %>,
   {

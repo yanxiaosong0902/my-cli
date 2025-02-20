@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es6", "dom", "dom.iterable", "ES2015", "ES2016", "ES2017"],
+    "lib": ["dom", "dom.iterable", "ESNext"],
     "jsx": "react",
-    "module": "commonjs",
+    "module": "ESNext",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"]
