@@ -4,6 +4,7 @@
     "lib": ["dom", "dom.iterable", "ESNext"],
     "jsx": "react",
     "module": "ESNext",
+    "moduleResolution": "node",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"]
@@ -11,6 +12,7 @@
     "typeRoots": ["./types", "./node_modules/@types"],
     "importHelpers": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true

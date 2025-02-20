@@ -23,7 +23,9 @@ async function genWebpackConfig({ webframe, projectName, less, typescript, eslin
       babelConfig.plugins.push('\'@babel/preset-react\'')
       packagejson = addReact(packagejson)
       webpackConfig.extensions.push('\'.jsx\'')
+      webpackProdConfig.extensions.push('\'.jsx\'')
       webpackConfig.entry.push(typescript ? '\'./src/index.tsx\'' : '\'./src/index.jsx\'')
+      webpackProdConfig.entry.push(typescript ? '\'./src/index.tsx\'' : '\'./src/index.jsx\'')
       if (less) {
         webpackConfig.rules.push(LESS_RULE, LESS_MODULE_RULE)
         webpackProdConfig.rules.push(PROD_LESS_RULE, PROD_LESS_MODULE_RULE)
@@ -31,7 +33,9 @@ async function genWebpackConfig({ webframe, projectName, less, typescript, eslin
       }
       if (typescript) {
         webpackConfig.extensions.push('\'.ts\'', '\'.tsx\'')
+        webpackProdConfig.extensions.push('\'.ts\'', '\'.tsx\'')
         webpackConfig.rules.push(TS_RULE)
+        webpackProdConfig.rules.push(TS_RULE)
         packagejson = addTypescript(packagejson)
         packagejson = addReactTypes(packagejson)
       }
@@ -59,6 +63,16 @@ async function genWebpackConfig({ webframe, projectName, less, typescript, eslin
       break
   }
   bar.tick(10)
+  packageJson.dependencies = Object.keys(packagejson.dependencies).sort().reduce((obj, key) => {
+    obj[key] = packagejson.dependencies[key]
+    return obj
+  }
+  , {})
+  packageJson.devDependencies = Object.keys(packagejson.devDependencies).sort().reduce((obj, key) => {
+    obj[key] = packagejson.devDependencies[key]
+    return obj
+  }
+  , {})
   return {
     webpackConfig,
     webpackProdConfig,

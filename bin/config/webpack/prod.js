@@ -13,8 +13,7 @@ export default {
       template: './index.ejs'
     })`,
     `new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].[contenthash].css'
+      filename: '[name].[contenthash].css'
     })`
   ],
   extensions: ['\'.js\''],

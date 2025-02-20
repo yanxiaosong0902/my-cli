@@ -10,7 +10,7 @@ export default {
     'html-webpack-plugin': '^5',
     'css-loader': '^7',
     'style-loader': '^4',
-    'mini-css-extract-plugin': '^10',
+    'mini-css-extract-plugin': '^2',
     'postcss': '^8',
     'postcss-import': '^16',
     'postcss-loader': '^8',
