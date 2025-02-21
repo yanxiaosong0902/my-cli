@@ -3,19 +3,13 @@ import { WebFrameOptions, ESLintOptions, LessOptions, TypeScriptOptions, Bundler
 import { genWebpackConfig } from './genWebpackConfig.js'
 import { writeWebpackFile } from './webpack/writeWebpackFile.js'
 import bar from '../progress/index.js'
+import { createVueProject } from './createVueProject.js'
 
 function parseOption(option) {
   return option === Options.Yes ? true : false
 }
 
 export async function createWebProject(projectName) {
-  const questions = [{
-    type: 'list',
-    name: 'bundler',
-    message: 'which bundler do you need ?',
-    choices: BundlerOptions
-  }]
-  const { bundler } = await inquirer.prompt(questions)
 
   const webframeQuestions = [{
     type: 'list',
@@ -24,6 +18,19 @@ export async function createWebProject(projectName) {
     choices: WebFrameOptions
   }]
   const { webframe } = await inquirer.prompt(webframeQuestions)
+
+  if (webframe === Options.Vue) {
+    createVueProject(projectName)
+    return
+  }
+
+  const questions = [{
+    type: 'list',
+    name: 'bundler',
+    message: 'which bundler do you need ?',
+    choices: BundlerOptions
+  }]
+  const { bundler } = await inquirer.prompt(questions)
 
   const LessQuestions = [{
     type: 'list',
