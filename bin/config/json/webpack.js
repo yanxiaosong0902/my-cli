@@ -7,14 +7,7 @@ export default {
     'webpack': '^5',
     'webpack-cli': '^5',
     'webpack-dev-server': '^5',
-    'html-webpack-plugin': '^5',
-    'css-loader': '^7',
-    'style-loader': '^4',
-    'mini-css-extract-plugin': '^2',
-    'postcss': '^8',
-    'postcss-import': '^16',
-    'postcss-loader': '^8',
-    'postcss-preset-env': '^10',
+    'html-webpack-plugin': '^5'
   },
   'dependencies': {
     'core-js': '^3'

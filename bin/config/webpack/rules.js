@@ -103,7 +103,7 @@ const PROD_LESS_RULE =
 const TS_RULE = 
 `{
   test: /\.(ts|tsx)$/,
-  use: 'ts-loader',
+  use: ['babel-loader', 'ts-loader'],
   exclude: /node_modules/
 }`
 

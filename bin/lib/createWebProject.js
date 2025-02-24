@@ -32,15 +32,6 @@ export async function createWebProject(projectName) {
   }]
   const { bundler } = await inquirer.prompt(questions)
 
-  const LessQuestions = [{
-    type: 'list',
-    name: 'less',
-    message: 'do you need less ?',
-    choices: LessOptions
-  }]
-
-  const { less } = await inquirer.prompt(LessQuestions)
-
   const typescriptQuestions = [{
     type: 'list',
     name: 'typescript',
@@ -56,6 +47,18 @@ export async function createWebProject(projectName) {
     choices: ESLintOptions
   }]
   const { eslint } = await inquirer.prompt(eslintQuestions)
+
+  let less = Options.No
+
+  if (webframe !== Options.None) {
+    const LessQuestions = [{
+      type: 'list',
+      name: 'less',
+      message: 'do you need less ?',
+      choices: LessOptions
+    }]
+    less = await inquirer.prompt(LessQuestions)
+  }
 
   const options = {
     projectName,

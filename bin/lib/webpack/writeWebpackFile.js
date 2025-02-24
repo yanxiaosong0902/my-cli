@@ -60,6 +60,13 @@ export async function writeWebpackFile(config, options) {
         fs.copySync(resolve(__dirname, '../../template/react'), virtualWorkspace)
       }
     }
+    if (webframe === Options.None) {
+      if (typescript) {
+        fs.copySync(resolve(__dirname, '../../template/ts'), virtualWorkspace)
+      } else {
+        fs.copySync(resolve(__dirname, '../../template/js'), virtualWorkspace)
+      }
+    }
     fs.mkdirSync(`${workSpace}/${projectName}`, {
       recursive: true
     })

@@ -1,7 +1,7 @@
 import pluginJs from '@eslint/js'
 import globals from 'globals'
 <% if (ts) { -%>
-import ts from '@eslint/typescript'
+import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 <% } -%>
 <% if (jsPlugins.length > 0) { -%>
@@ -45,6 +45,26 @@ export default  [
       'no-explicit-any': 'off',
       'semi': ['error', 'never'],
       'no-unused-vars': 'off',
+      'indent': ['error', 2, {
+        'ignoredNodes': ['ConditionalExpression', 'TSTypeParameterInstantiation'],
+        'SwitchCase': 1,
+      }],
+      'eol-last': ['error', 'always'],
+      'arrow-spacing': [
+        'error',
+        {
+          'before': true,
+          'after': true
+        }
+      ],
+      'no-trailing-spaces': [
+        'error',
+        {
+          'skipBlankLines': false,
+          'ignoreComments': false
+        }
+      ],
+      <% if (ts) { -%>
       'react-hooks/exhaustive-deps': 'warn',
       'react/jsx-indent': ['error', 2, {
         'indentLogicalExpressions': true
@@ -66,25 +86,7 @@ export default  [
         }
       ],
       'react/self-closing-comp': ['error', { 'component': true, 'html': true }],
-      'indent': ['error', 2, {
-        'ignoredNodes': ['ConditionalExpression', 'TSTypeParameterInstantiation'],
-        'SwitchCase': 1,
-      }],
-      'eol-last': ['error', 'always'],
-      'arrow-spacing': [
-        'error',
-        {
-          'before': true,
-          'after': true
-        }
-      ],
-      'no-trailing-spaces': [
-        'error',
-        {
-          'skipBlankLines': false,
-          'ignoreComments': false
-        }
-      ],
+      <% } -%>
     }
   }
 ]
